@@ -3,6 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VirtualViveController : MonoBehaviour {
+	public enum ViveControllerInput {
+		TouchPadKeyDown,
+		TouchPadKey,
+		TouchPadKeyUp,
+		HairTriggerKeyDown,
+		HairTriggerKey,
+		HairTriggerKeyUp,
+		GripKeyKeyDown,
+		GripKeyKey,
+		GripKeyKeyUp,
+		SystemKeyKeyDown,
+		SystemKeyKey,
+		SystemKeyKeyUp,
+	}
+
 	// 追跡するVRオブジェクト
 	[SerializeField]
 	SteamVR_TrackedObject trackedObj = null;
@@ -35,6 +50,7 @@ public class VirtualViveController : MonoBehaviour {
 		}
 	}
 	// 今回更新時に使用された入力状態
+	[SerializeField, Tooltip("受け付けられた入力状態"), ReadOnly]
 	bool fixedVirtualTouchKey = false, fixedVirtualTriggerKey = false, fixedVirtualGripKey = false;
 	// 前回更新持に使用された入力状態
 	bool prevVirtualTouchKey = false, prevVirtualTriggerKey = false, prevVirtualGripKey = false;
@@ -44,11 +60,16 @@ public class VirtualViveController : MonoBehaviour {
 	// 前回更新時のCameraRigの位置
 	Vector3 prevFollowCamRigPos = Vector3.zero;
 
-	SteamVR_Controller.Device Controller {
+	SteamVR_Controller.Device SteamVRController {
 		get {
 			return SteamVR_Controller.Input((int)trackedObj.index);
 		}
 	}
+
+	Vector3 simVelocity = Vector3.zero;
+	Vector3 simAngularVelocity = Vector3.zero;
+	Vector3 prevFixedPos = Vector3.zero;
+	Vector3 prevFixedRot = Vector3.zero;
 
 	void Start() {
 		rb = GetComponent<Rigidbody>();
@@ -62,6 +83,9 @@ public class VirtualViveController : MonoBehaviour {
 			transform.localPosition = Vector3.zero;
 			transform.localRotation = Quaternion.identity;
 		}
+
+		prevFixedPos = transform.position;
+		prevFixedRot = transform.rotation.eulerAngles;
 	}
 	
 	void Update () {
@@ -70,9 +94,9 @@ public class VirtualViveController : MonoBehaviour {
 			transform.position += (-prevFollowCamRigPos + followCamRig.position);
 			prevFollowCamRigPos = followCamRig.position;
 		}
-	}
-
-	void FixedUpdate() {
+//	}
+//
+//	void FixedUpdate() {
 		// 前回更新時の入力状態を保持
 		prevVirtualTouchKey		= fixedVirtualTouchKey;
 		prevVirtualTriggerKey	= fixedVirtualTriggerKey;
@@ -87,14 +111,22 @@ public class VirtualViveController : MonoBehaviour {
 		VirtualTouchKey		= false;
 		VirtualTriggerKey	= false;
 		VirtualGripKey		= false;
+
+		simVelocity = (transform.position - prevFixedPos) / Time.deltaTime;
+		simAngularVelocity = (transform.rotation.eulerAngles - prevFixedRot) / Time.deltaTime;
+		prevFixedPos = transform.position;
+		prevFixedRot = transform.rotation.eulerAngles;
 	}
 
 	public Vector3 velocity {
 		get {
+			// SteamVR
 			if (trackedObj.enabled && (trackedObj.index != SteamVR_TrackedObject.EIndex.None)) {
-				return Controller.velocity;
-			} else if (rb) {
-				return rb.velocity;
+				return SteamVRController.velocity;
+			}
+			// シミュレート
+			 else if (rb) {
+				return simVelocity;
 			}
 			return Vector3.zero;
 		}
@@ -102,10 +134,13 @@ public class VirtualViveController : MonoBehaviour {
 
 	public Vector3 angularVelocity {
 		get {
+			// SteamVR
 			if (trackedObj.enabled && (trackedObj.index != SteamVR_TrackedObject.EIndex.None)) {
-				return Controller.angularVelocity;
-			} else if (rb) {
-				return rb.angularVelocity;
+				return SteamVRController.angularVelocity;
+			}
+			// シミュレート
+			else if (rb) {
+				return simAngularVelocity;
 			}
 			return Vector3.zero;
 		}
@@ -113,7 +148,7 @@ public class VirtualViveController : MonoBehaviour {
 
 	public bool GetPress(ulong buttonMask) {
 		if (trackedObj.enabled && (trackedObj.index != SteamVR_TrackedObject.EIndex.None)) {
-			return Controller.GetPress(buttonMask);
+			return SteamVRController.GetPress(buttonMask);
 		} else {
 			bool ret = false;
 			if ((buttonMask & SteamVR_Controller.ButtonMask.Touchpad) != 0.0f) {
@@ -142,7 +177,7 @@ public class VirtualViveController : MonoBehaviour {
 	}
 	public bool GetPressUp(ulong buttonMask) {
 		if (trackedObj.enabled && (trackedObj.index != SteamVR_TrackedObject.EIndex.None)) {
-			return Controller.GetPressUp(buttonMask);
+			return SteamVRController.GetPressUp(buttonMask);
 		} else {
 			bool ret = false;
 			if ((buttonMask & SteamVR_Controller.ButtonMask.Touchpad) != 0.0f) {
@@ -171,7 +206,7 @@ public class VirtualViveController : MonoBehaviour {
 	}
 	public bool GetPressDown(ulong buttonMask) {
 		if (trackedObj.enabled && (trackedObj.index != SteamVR_TrackedObject.EIndex.None)) {
-			return Controller.GetPressDown(buttonMask);
+			return SteamVRController.GetPressDown(buttonMask);
 		} else {
 			bool ret = false;
 			if ((buttonMask & SteamVR_Controller.ButtonMask.Touchpad) != 0.0f) {
@@ -201,29 +236,77 @@ public class VirtualViveController : MonoBehaviour {
 
 	public Vector2 GetAxis() {
 		if (trackedObj.index != SteamVR_TrackedObject.EIndex.None) {
-			return Controller.GetAxis();
+			return SteamVRController.GetAxis();
 		}
 		else {
 			return Vector2.zero;
 		}
 	}
 
-	public bool GetHairTouch() {
+	public bool GetTouchPad() {
 		return GetPress(SteamVR_Controller.ButtonMask.Touchpad);
 	}
-	public bool GetHairTouthUp() {
-		return GetPressUp(SteamVR_Controller.ButtonMask.Touchpad);
-	}
-	public bool GetHairTouthDown() {
+	public bool GetTouchPadDown() {
 		return GetPressDown(SteamVR_Controller.ButtonMask.Touchpad);
+	}
+	public bool GetTouchPadUp() {
+		return GetPressUp(SteamVR_Controller.ButtonMask.Touchpad);
 	}
 	public bool GetHairTrigger() {
 		return GetPress(SteamVR_Controller.ButtonMask.Trigger);
 	}
+	public bool GetHairTriggerDown() {
+		return GetPressDown(SteamVR_Controller.ButtonMask.Trigger);
+	}
 	public bool GetHairTriggerUp() {
 		return GetPressUp(SteamVR_Controller.ButtonMask.Trigger);
 	}
-	public bool GetHairTriggerDown() {
-		return GetPressDown(SteamVR_Controller.ButtonMask.Trigger);
+	public bool GetGrip() {
+		return GetPress(SteamVR_Controller.ButtonMask.Grip);
+	}
+	public bool GetGripDown() {
+		return GetPressDown(SteamVR_Controller.ButtonMask.Grip);
+	}
+	public bool GetGripUp() {
+		return GetPressUp(SteamVR_Controller.ButtonMask.Grip);
+	}
+	public bool GetSystem() {
+		return GetPress(SteamVR_Controller.ButtonMask.System);
+	}
+	public bool GetSystemDown() {
+		return GetPressDown(SteamVR_Controller.ButtonMask.System);
+	}
+	public bool GetSystemUp() {
+		return GetPressUp(SteamVR_Controller.ButtonMask.System);
+	}
+
+	static public bool GetInput(VirtualViveController _virtualCtrl, ViveControllerInput _input) {
+		switch (_input) {
+		case VirtualViveController.ViveControllerInput.TouchPadKeyDown:
+			return _virtualCtrl.GetTouchPadDown();
+		case VirtualViveController.ViveControllerInput.TouchPadKey:
+			return _virtualCtrl.GetTouchPad();
+		case VirtualViveController.ViveControllerInput.TouchPadKeyUp:
+			return _virtualCtrl.GetTouchPadUp();
+		case VirtualViveController.ViveControllerInput.HairTriggerKeyDown:
+			return _virtualCtrl.GetHairTriggerDown();
+		case VirtualViveController.ViveControllerInput.HairTriggerKey:
+			return _virtualCtrl.GetHairTrigger();
+		case VirtualViveController.ViveControllerInput.HairTriggerKeyUp:
+			return _virtualCtrl.GetHairTriggerUp();
+		case VirtualViveController.ViveControllerInput.GripKeyKeyDown:
+			return _virtualCtrl.GetGripDown();
+		case VirtualViveController.ViveControllerInput.GripKeyKey:
+			return _virtualCtrl.GetGrip();
+		case VirtualViveController.ViveControllerInput.GripKeyKeyUp:
+			return _virtualCtrl.GetGripUp();
+		case VirtualViveController.ViveControllerInput.SystemKeyKeyDown:
+			return _virtualCtrl.GetSystemDown();
+		case VirtualViveController.ViveControllerInput.SystemKeyKey:
+			return _virtualCtrl.GetSystem();
+		case VirtualViveController.ViveControllerInput.SystemKeyKeyUp:
+			return _virtualCtrl.GetSystemUp();
+		}
+		return false;
 	}
 }

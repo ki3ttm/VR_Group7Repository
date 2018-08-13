@@ -102,7 +102,7 @@ public class LaserPointer : MonoBehaviour {
 			// 的を非表示にする
 			reticle.SetActive(false);
 		}
-		//		Debug.Log("UpdateEnd");
+		//Debug.Log("UpdateEnd");
 
 		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && shouldTeleport) {
 			Teleport();
