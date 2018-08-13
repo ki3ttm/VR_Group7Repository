@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageManager : MonoBehaviour {
+public class SceneManager : MonoBehaviour {
 	/// <summary>
 	/// 現在のシーンの列挙子
 	/// </summary>

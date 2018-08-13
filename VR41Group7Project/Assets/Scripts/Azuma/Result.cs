@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Result : MonoBehaviour {
 
-	private StageManager manager;   // マネージャー
+	private SceneManager manager;   // マネージャー
 	private VRControllerGet contoller;
 
 	[SerializeField] GameObject resultPlane;
 
 	// Use this for initialization
 	void Start() {
-		manager = transform.parent.GetComponent<StageManager>();
+		manager = transform.parent.GetComponent<SceneManager>();
 		contoller = transform.parent.GetComponent<VRControllerGet>();
 	}
 
@@ -19,15 +19,15 @@ public class Result : MonoBehaviour {
 	void Update() {
 		// マウス入力
 		if (Input.GetMouseButtonDown(0)) {
-			manager.SceneChange(StageManager.SceneState.Title);
+			manager.SceneChange(SceneManager.SceneState.Title);
 		}
 
 		// VRの入力
 		if (contoller.LeftController.GetHairTrigger()) {
-			manager.SceneChange(StageManager.SceneState.Title);
+			manager.SceneChange(SceneManager.SceneState.Title);
 		}
 		if (contoller.RightController.GetHairTrigger()) {
-			manager.SceneChange(StageManager.SceneState.Title);
+			manager.SceneChange(SceneManager.SceneState.Title);
 		}
 	}
 
