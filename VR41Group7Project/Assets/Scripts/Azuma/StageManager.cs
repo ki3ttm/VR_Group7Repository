@@ -58,6 +58,9 @@ public class StageManager : MonoBehaviour {
 	public IEnumerator SceneChangeNow(SceneState setSceneState) {
 		fadeNow = true;
 		yield return StartCoroutine(fade.FadeOut());
+		foreach (Transform sceneChild in sceneObj[state.GetHashCode()].transform) {
+			Destroy(sceneChild.gameObject);
+		}
 		sceneObj[state.GetHashCode()].SetActive(false);
 		state = setSceneState;
 		sceneObj[state.GetHashCode()].SetActive(true);
