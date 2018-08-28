@@ -77,18 +77,18 @@ public class VirtualViveController : MonoBehaviour {
 			prevFollowCamRigPos = followCamRig.position;
 		}
 
-		// SteamVRのコントローラーが有効ならその子になる
-		if (trackedObj.gameObject.activeInHierarchy) {
-			transform.parent = trackedObj.transform;
-			transform.localPosition = Vector3.zero;
-			transform.localRotation = Quaternion.identity;
-		}
-
 		prevFixedPos = transform.position;
 		prevFixedRot = transform.rotation.eulerAngles;
 	}
 	
 	void Update () {
+		// SteamVRのコントローラーが有効ならその子になる
+		if (trackedObj.gameObject.activeInHierarchy && (transform.parent != trackedObj.transform)) {
+			transform.parent = trackedObj.transform;
+			transform.localPosition = Vector3.zero;
+			transform.localRotation = Quaternion.identity;
+		}
+
 		// CameraRigの移動に合わせて位置を補正
 		if (!trackedObj.gameObject.activeInHierarchy && followCamRig && (prevFollowCamRigPos != followCamRig.position)) {
 			transform.position += (-prevFollowCamRigPos + followCamRig.position);

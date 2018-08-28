@@ -4,6 +4,26 @@ using UnityEngine;
 
 [RequireComponent(typeof(HermiteCurve))]
 public class EnemyManager : MonoBehaviour {
+	public enum State {
+		standbyMove,
+		aim,
+		actionBefore,
+		actionAfter,
+		damage,
+	}
+
+	[SerializeField]
+	State st = State.standbyMove;
+	State St {
+		get {
+			return st;
+		}
+		set {
+			st = value;
+			actionBeginTime = Time.time;
+		}
+	}
+
 	HermiteCurve hermite = null;
 	HermiteCurve Hermite {
 		get {
@@ -14,10 +34,7 @@ public class EnemyManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField, Tooltip("出現した時間"), ReadOnly]
-	float spawnBeginTime = 0.0f;
-
-	[SerializeField, Tooltip("目標地点までの移動に掛かる時間"),]
+	[SerializeField, Tooltip("目標地点までの移動に掛かる時間")]
 	float standbyMoveTime = 5.0f;
 	public float StandbyMoveTime {
 		get {
@@ -61,17 +78,49 @@ public class EnemyManager : MonoBehaviour {
 		}
 	}
 
+	[SerializeField, Tooltip("")]
+	Transform actionMarker = null;
+
+	[SerializeField, Tooltip("")]
+	float aimTime = 5.0f;
+
+	[SerializeField, Tooltip("")]
+	GameObject actionMarkerPrefab = null;
+
+	[SerializeField, Tooltip("")]
+	Transform actionMarkerStartPoint = null;
+
+	[SerializeField, Tooltip("")]
+	Transform targetPoint = null;
+
+	[SerializeField, Tooltip("")]
+	float actionBeforeStanbdyTime = 5.0f;
+
+	[SerializeField, Tooltip("")]
+	float actionAfterStanbdyTime = 3.0f;
+
+	[SerializeField, Tooltip("")]
+	float damageStanTime = 2.0f;
+
+	[SerializeField, Tooltip("行動を開始した時間"), ReadOnly]
+	float actionBeginTime = 0.0f;
+
+	[SerializeField, Tooltip("")]
+	HumanMotion motion = null;
+
 	void Start() {
-		spawnBeginTime = Time.time;
+//		defTargetPointRelativePos = (targetPoint.GetComponent<EnemyActionMarker>().Circle.position - transform.position);
+		actionBeginTime = Time.time;
 		Routing();
+		motion.StartAnimation(HumanMotion.AnimaList.Walk);
 	}
 
 	void Update() {
-		// 定位置までの移動中
-		if (moveRatio < 1.0f) {
+		switch (St) {
+		case State.standbyMove:
 			// 進行率を更新
 			float befRatio = moveRatio;
-			moveRatio = ((Time.time - spawnBeginTime) / StandbyMoveTime);
+			moveRatio = ((Time.time - actionBeginTime) / StandbyMoveTime);
 			moveRatio = Mathf.Clamp(moveRatio, 0.0f, 1.0f);
 
 			// 進行率から位置と向きを求める
@@ -79,13 +128,57 @@ public class EnemyManager : MonoBehaviour {
 			if (befRatio != moveRatio) {
 				transform.rotation = Quaternion.LookRotation(Hermite.GetPoint(moveRatio) - Hermite.GetPoint(befRatio));
 			}
-		}
-		// 定位置
-		else {
-			// 定位置に着いてからの経過時間を求める
-			float elapsedTime = (Time.time - spawnBeginTime - StandbyMoveTime);
 
+			if (moveRatio >= 1.0f) {
+				St = State.aim;
+				motion.StartAnimation(HumanMotion.AnimaList.Wait);
+				targetPoint = Instantiate(actionMarkerPrefab).transform;
+				actionMarkerPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
+				targetPoint.position = actionMarkerStartPoint.position;
+			}
 
+			break;
+
+		case State.aim:
+			// ターゲットに向く
+			transform.LookAt(targetPoint);
+
+			if ((Time.time - actionBeginTime) >= aimTime) {
+				St = State.actionBefore;
+
+				// 的の移動を終了
+				Destroy(targetPoint.GetComponent<FollowTarget>());
+
+				// 投げるモーション開始
+				motion.StartAnimation(HumanMotion.AnimaList.Throw);
+			}
+			break;
+
+		case State.actionBefore:
+			if ((Time.time - actionBeginTime) >= actionBeforeStanbdyTime) {
+				Action();
+				St = State.actionAfter;
+			}
+			break;
+
+		case State.actionAfter:
+			if ((Time.time - actionBeginTime) >= actionAfterStanbdyTime) {
+				St = State.aim;
+				motion.StartAnimation(HumanMotion.AnimaList.Wait);
+
+				// 新たな的を生成し直す
+				Destroy(targetPoint.gameObject);
+				targetPoint = Instantiate(actionMarkerPrefab).transform;
+				actionMarkerPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
+				targetPoint.position = actionMarkerStartPoint.position;
+			}
+			break;
+
+		case State.damage:
+			if ((Time.time - actionBeginTime) >= damageStanTime) {
+				St = State.actionBefore;
+			}
+			break;
 		}
 	}
 
@@ -117,5 +210,9 @@ public class EnemyManager : MonoBehaviour {
 
 		// 目的位置を追加
 		Hermite.SrcPointList.Add(enemyPoint);
+	}
+
+	void Action() {
+		
 	}
 }

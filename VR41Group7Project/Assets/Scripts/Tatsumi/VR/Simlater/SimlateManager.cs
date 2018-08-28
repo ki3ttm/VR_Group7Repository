@@ -816,13 +816,13 @@ public class SimlateManager : MonoBehaviour {
 		rightCtrlTrans.position	= befRightCtrlPos;
 		rightCtrlTrans.rotation	= befRightCtrlRot;
 
-		// Rigidbodyを使って位置と向きを設定
-		Vector3 headMovePos = (aftHeadPos - befHeadPos);
-		Quaternion headMoveRot = (aftHeadRot * Quaternion.Inverse(befHeadRot));
-		Vector3 leftCtrlMovePos = (aftLeftCtrlPos - befLeftCtrlPos);
-		Quaternion leftCtrlMoveRot = (aftLeftCtrlRot * Quaternion.Inverse(befLeftCtrlRot));
-		Vector3 rightCtrlMovePos = (aftRightCtrlPos - befRightCtrlPos);
-		Quaternion rightCtrlMoveRot = (aftRightCtrlRot * Quaternion.Inverse(befRightCtrlRot));
+		//// Rigidbodyを使って位置と向きを設定
+		//Vector3 headMovePos = (aftHeadPos - befHeadPos);
+		//Quaternion headMoveRot = (aftHeadRot * Quaternion.Inverse(befHeadRot));
+		//Vector3 leftCtrlMovePos = (aftLeftCtrlPos - befLeftCtrlPos);
+		//Quaternion leftCtrlMoveRot = (aftLeftCtrlRot * Quaternion.Inverse(befLeftCtrlRot));
+		//Vector3 rightCtrlMovePos = (aftRightCtrlPos - befRightCtrlPos);
+		//Quaternion rightCtrlMoveRot = (aftRightCtrlRot * Quaternion.Inverse(befRightCtrlRot));
 
 		headRb.MovePosition(aftHeadPos);
 		headRb.MoveRotation(aftHeadRot);

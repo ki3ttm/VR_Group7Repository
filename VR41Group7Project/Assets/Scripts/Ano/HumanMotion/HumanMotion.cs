@@ -6,9 +6,8 @@ public class HumanMotion : MonoBehaviour {
     public enum AnimaList { Wait,Walk,Throw};
     Animator HumanAnimaData;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         HumanAnimaData = GetComponent<Animator>();
-
     }
 	
 	// Update is called once per frame
