@@ -4,4 +4,19 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Azuma/SceneManager.unity
+    guid: 7951a8551d2bc924b82756a5c087a9dd
+  - enabled: 1
+    path: Assets/Scenes/Azuma/GameMain.unity
+    guid: e8db09e7b8dea8f478578ed7edb26f1e
+  - enabled: 1
+    path: Assets/Scenes/Azuma/Result.unity
+    guid: 82a0ee2f5a125eb4da83899aba7facd0
+  - enabled: 1
+    path: Assets/Scenes/Azuma/StageSelect.unity
+    guid: 211a53bcebd4ba34d99d2d38aafc62f1
+  - enabled: 1
+    path: Assets/Scenes/Azuma/Title.unity
+    guid: bea38bc88852f1a42aa880bf6dec2448
