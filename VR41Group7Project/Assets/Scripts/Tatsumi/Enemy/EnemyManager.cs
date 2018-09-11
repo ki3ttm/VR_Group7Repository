@@ -146,16 +146,7 @@ public class EnemyManager : MonoBehaviour {
 				// 待機モーション開始
 				motion.StartAnimation(HumanMotion.AnimaList.Wait);
 
-				// 的の設定
-				targetPoint = Instantiate(targetPointPrefab).transform;
-				targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
-				targetPoint.position = targetPointStartPoint.position;
-
-				// 投げるオブジェクトを生成
-				throwObj = Instantiate(throwObjPrefab).transform;
-				throwObj.parent = throwObjPoint;
-				throwObj.localPosition = Vector3.zero;
-				throwObj.GetComponent<Rigidbody>().isKinematic = true;
+				ThrowStandby();
 			}
 
 			break;
@@ -196,16 +187,7 @@ public class EnemyManager : MonoBehaviour {
 				destroyFade.DestroyOnLastFadeEnd = true;
 				destroyFade.LoopFade = false;
 
-				// 新たな的を生成し直す
-				targetPoint = Instantiate(targetPointPrefab).transform;
-				targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
-				targetPoint.position = targetPointStartPoint.position;
-
-				// 投げるオブジェクトを生成
-				throwObj = Instantiate(throwObjPrefab).transform;
-				throwObj.parent = throwObjPoint;
-				throwObj.localPosition = Vector3.zero;
-				throwObj.GetComponent<Rigidbody>().isKinematic = true;
+				ThrowStandby();
 			}
 			break;
 
@@ -247,6 +229,25 @@ public class EnemyManager : MonoBehaviour {
 		Hermite.SrcPointList.Add(enemyPoint);
 	}
 
+	void ThrowStandby() {
+		// 新たな的を生成
+		targetPoint = Instantiate(targetPointPrefab).transform;
+		targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
+		targetPoint.position = targetPointStartPoint.position;
+
+		// 投げるオブジェクトを生成
+		throwObj = Instantiate(throwObjPrefab).transform;
+		throwObj.parent = throwObjPoint;
+		throwObj.localPosition = Vector3.zero;
+		throwObj.GetComponent<Rigidbody>().isKinematic = true;
+
+		// 投げるオブジェクトのプレイヤーが掴めるコンポーネントを無効化
+		GrabbableCollider[] grabCols = throwObj.GetComponentsInChildren<GrabbableCollider>();
+		foreach (var grabCol in grabCols) {
+			grabCol.GetComponent<Collider>().enabled = false;
+		}
+	}
+
 	void ThrowObject(Vector3 _localVec) {
 		Rigidbody rb = throwObj.GetComponent<Rigidbody>();
 		throwObj.transform.parent = throwAfterParent;
@@ -258,8 +259,14 @@ public class EnemyManager : MonoBehaviour {
 		rb.velocity = (throwObj.rotation * _localVec);
 
 		//test
-//		UnityEditor.Selection.activeTransform = throwObj;
-//		UnityEditor.EditorApplication.isPaused = true;
+		//		UnityEditor.Selection.activeTransform = throwObj;
+		//		UnityEditor.EditorApplication.isPaused = true;
+
+		// 投げるオブジェクトのプレイヤーが掴めるコンポーネントを有効化
+		GrabbableCollider[] grabCols = throwObj.GetComponentsInChildren<GrabbableCollider>();
+		foreach (var grabCol in grabCols) {
+			grabCol.GetComponent<Collider>().enabled = true;
+		}
 
 		throwObj = null;
 	}
