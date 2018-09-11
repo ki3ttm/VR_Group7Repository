@@ -509,7 +509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4750965257364208}
   m_Layer: 0
-  m_Name: ActionMarkerStartPoint
+  m_Name: TargetPointStartPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1241,17 +1241,20 @@ MonoBehaviour:
   routeNodeList: []
   outSideCircle: {fileID: 0}
   enemyPointsCircle: {fileID: 0}
-  actionMarker: {fileID: 0}
-  aimTime: 4
-  actionMarkerPrefab: {fileID: 1919324651534036, guid: 90344a1089e85da4b86ad163ff270492,
-    type: 2}
-  actionMarkerStartPoint: {fileID: 4167087528725176}
   targetPoint: {fileID: 0}
+  targetPointPrefab: {fileID: 1919324651534036, guid: 90344a1089e85da4b86ad163ff270492,
+    type: 2}
+  aimTime: 4
+  targetPointStartPoint: {fileID: 4750965257364208}
   actionBeforeStanbdyTime: 1
   actionAfterStanbdyTime: 2
   damageStanTime: 1
   actionBeginTime: 3.4028235e+38
   motion: {fileID: 114480131831402086}
+  throwObjPrefab: {fileID: 1734090304930848, guid: e1ca349a817f92d4eb72a74ef4d3c7af,
+    type: 2}
+  throwObjPoint: {fileID: 4746009481096538}
+  throwObj: {fileID: 0}
 --- !u!114 &114863338929094192
 MonoBehaviour:
   m_ObjectHideFlags: 1

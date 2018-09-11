@@ -16,6 +16,11 @@ public class FadeColor : MonoBehaviour {
 
 	[Header("色リスト"), SerializeField, Tooltip("色リスト")]
 	List<Color> colList = new List<Color>();
+	public List<Color> ColList {
+		get {
+			return colList;
+		}
+	}
 	[SerializeField, Tooltip("現在の色のインデックス")]
 	int idx = 0;
 
@@ -30,7 +35,7 @@ public class FadeColor : MonoBehaviour {
 
 	[Header("設定項目"), SerializeField, Tooltip("所要時間")]
 	float requiredTime = 1.0f;
-	[SerializeField, Tooltip("使用するレンダラーのリスト\n設定されていなければStart()時に自身のRendererを取得する")]
+	[SerializeField, Tooltip("使用するレンダラーのリスト\n設定されていなければStart()時に自身と子のRendererを取得する")]
 	List<Renderer> rendererList = new List<Renderer>();
 	[SerializeField, Tooltip("フェードを行う")]
 	bool isFade = true;
@@ -65,10 +70,20 @@ public class FadeColor : MonoBehaviour {
 			loopFade = value;
 		}
 	}
+	[SerializeField, Tooltip("一連のフェード終了時にGameObjectごと削除するか\nLoopFadeがtrueなら無視される")]
+	bool destroyOnLastFadeEnd = false;
+	public bool DestroyOnLastFadeEnd {
+		get {
+			return destroyOnLastFadeEnd;
+		}
+		set {
+			destroyOnLastFadeEnd = value;
+		}
+	}
 
 	void Start() {
 		if (rendererList.Count == 0) {
-			rendererList.Add(GetComponent<Renderer>());
+			rendererList.Add(GetComponentInChildren<Renderer>());
 		}
 		prevIsFade = IsFade;
 
@@ -125,6 +140,10 @@ public class FadeColor : MonoBehaviour {
 					if (!LoopFade) {
 						// フェード終了
 						IsFade = false;
+						// 自動的に消滅する場合
+						if (DestroyOnLastFadeEnd) {
+							Destroy(gameObject);
+						}
 						return;
 					}
 					// ループする場合

@@ -78,38 +78,46 @@ public class EnemyManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField, Tooltip("")]
-	Transform actionMarker = null;
-
-	[SerializeField, Tooltip("")]
-	float aimTime = 5.0f;
-
-	[SerializeField, Tooltip("")]
-	GameObject actionMarkerPrefab = null;
-
-	[SerializeField, Tooltip("")]
-	Transform actionMarkerStartPoint = null;
-
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("目標地点")]
 	Transform targetPoint = null;
 
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("目標地点のプレハブ")]
+	GameObject targetPointPrefab = null;
+
+	[SerializeField, Tooltip("目標地点を定める時間")]
+	float aimTime = 5.0f;
+
+	[SerializeField, Tooltip("目標地点を定める開始位置")]
+	Transform targetPointStartPoint = null;
+
+	[SerializeField, Tooltip("行動前の待機時間")]
 	float actionBeforeStanbdyTime = 5.0f;
 
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("行動後の待機時間")]
 	float actionAfterStanbdyTime = 3.0f;
 
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("ダメージ時の怯み時間")]
 	float damageStanTime = 2.0f;
 
 	[SerializeField, Tooltip("行動を開始した時間"), ReadOnly]
 	float actionBeginTime = 0.0f;
 
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("モーション管理コンポーネント")]
 	HumanMotion motion = null;
 
+	[SerializeField, Tooltip("投げるオブジェクトのプレハブ")]
+	GameObject throwObjPrefab = null;
+
+	[SerializeField, Tooltip("投げるオブジェクトの待機位置")]
+	Transform throwObjPoint = null;
+
+	[SerializeField, Tooltip("投げるオブジェクト"), ReadOnly]
+	Transform throwObj = null;
+
+	[SerializeField, Tooltip("投げるオブジェクトの投げた後の親オブジェクト")]
+	Transform throwAfterParent = null;
+
 	void Start() {
-//		defTargetPointRelativePos = (targetPoint.GetComponent<EnemyActionMarker>().Circle.position - transform.position);
 		actionBeginTime = Time.time;
 		Routing();
 		motion.StartAnimation(HumanMotion.AnimaList.Walk);
@@ -131,10 +139,18 @@ public class EnemyManager : MonoBehaviour {
 
 			if (moveRatio >= 1.0f) {
 				St = State.aim;
+
+				// 待機モーション開始
 				motion.StartAnimation(HumanMotion.AnimaList.Wait);
-				targetPoint = Instantiate(actionMarkerPrefab).transform;
-				actionMarkerPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
-				targetPoint.position = actionMarkerStartPoint.position;
+
+				// 的の設定
+				targetPoint = Instantiate(targetPointPrefab).transform;
+				targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
+				targetPoint.position = targetPointStartPoint.position;
+
+				// 投げるオブジェクトを生成
+				throwObj = Instantiate(throwObjPrefab, throwObjPoint).transform;
+				throwObj.localPosition = Vector3.zero;
 			}
 
 			break;
@@ -149,14 +165,14 @@ public class EnemyManager : MonoBehaviour {
 				// 的の移動を終了
 				Destroy(targetPoint.GetComponent<FollowTarget>());
 
-				// 投げるモーション開始
+				// 投げモーション開始
 				motion.StartAnimation(HumanMotion.AnimaList.Throw);
 			}
 			break;
 
 		case State.actionBefore:
 			if ((Time.time - actionBeginTime) >= actionBeforeStanbdyTime) {
-				Action();
+				ThrowObject(new Vector3(0.0f, 1.0f, 1.0f));
 				St = State.actionAfter;
 			}
 			break;
@@ -164,13 +180,20 @@ public class EnemyManager : MonoBehaviour {
 		case State.actionAfter:
 			if ((Time.time - actionBeginTime) >= actionAfterStanbdyTime) {
 				St = State.aim;
+
+				// 待機モーション開始
 				motion.StartAnimation(HumanMotion.AnimaList.Wait);
 
+				// 古い的を削除
+				FadeColor destroyFade = targetPoint.gameObject.AddComponent<FadeColor>();
+				destroyFade.ColList.Add(new Color(0.0f, 0.0f, 0.0f, 0.0f));
+				destroyFade.DestroyOnLastFadeEnd = true;
+				destroyFade.LoopFade = false;
+
 				// 新たな的を生成し直す
-				Destroy(targetPoint.gameObject);
-				targetPoint = Instantiate(actionMarkerPrefab).transform;
-				actionMarkerPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
-				targetPoint.position = actionMarkerStartPoint.position;
+				targetPoint = Instantiate(targetPointPrefab).transform;
+				targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
+				targetPoint.position = targetPointStartPoint.position;
 			}
 			break;
 
@@ -212,7 +235,14 @@ public class EnemyManager : MonoBehaviour {
 		Hermite.SrcPointList.Add(enemyPoint);
 	}
 
-	void Action() {
-		
+	void ThrowObject(Vector3 _localVec) {
+		Rigidbody rb = throwObj.GetComponent<Rigidbody>();
+		rb.isKinematic = false;
+		Vector3 horizontalVec = (Quaternion.Euler(new Vector3(0.0f, transform.rotation.eulerAngles.y, 0.0f)) * new Vector3(_localVec.x, 0.0f, _localVec.y));
+		rb.velocity = new Vector3(horizontalVec.x, _localVec.y, horizontalVec.z);
+		throwObj.transform.parent = throwAfterParent;
+	}
+	void DropObject() {
+		ThrowObject(Vector3.zero);
 	}
 }

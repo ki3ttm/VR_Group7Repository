@@ -4,18 +4,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(HermiteCurve))]
 public class EnemyActionMarker : MonoBehaviour {
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("着弾地点オブジェクトのプレハブ")]
 	GameObject circlePrefab = null;
-	[SerializeField, Tooltip(""), ReadOnly]
+	[SerializeField, Tooltip("着弾地点オブジェクト"), ReadOnly]
 	Transform circle = null;
 	public Transform Circle {
 		get {
 			return circle;
 		}
 	}
-	[SerializeField, Tooltip("")]
+	[SerializeField, Tooltip("線のプレハブ")]
 	GameObject linePrefab = null;
-	[SerializeField, Tooltip(""), ReadOnly]
+	[SerializeField, Tooltip("線(破線を構成する短い線)のリスト"), ReadOnly]
 	List<Transform> lineList = new List<Transform>();
 	public List<Transform> LineList {
 		get {
@@ -24,13 +24,13 @@ public class EnemyActionMarker : MonoBehaviour {
 	}
 	HermiteCurve hermite = null;
 
-	[SerializeField]
+	[SerializeField, Tooltip("線の本数")]
 	int lineNum = 10;
-	[SerializeField, ReadOnly]
+	[SerializeField, Tooltip("線の本数から求める一本が全体に占める比率"), ReadOnly]
 	float spanRatio = 0.0f;
-	[SerializeField]
+	[SerializeField, Tooltip("線の動きがループするまでにかかる時間")]
 	float loopTime = 1.0f;
-	[SerializeField]
+	[SerializeField, Tooltip("生成された時間")]
 	float startTime = 0.0f;
 
 	void Awake() {
