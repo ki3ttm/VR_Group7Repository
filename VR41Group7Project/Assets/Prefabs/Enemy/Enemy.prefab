@@ -478,7 +478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4039244810288464}
   - component: {fileID: 136596023566700176}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1246,7 +1246,7 @@ MonoBehaviour:
     type: 2}
   aimTime: 4
   targetPointStartPoint: {fileID: 4750965257364208}
-  actionBeforeStanbdyTime: 1
+  actionBeforeStanbdyTime: 1.5
   actionAfterStanbdyTime: 2
   damageStanTime: 1
   actionBeginTime: 3.4028235e+38
@@ -1255,6 +1255,8 @@ MonoBehaviour:
     type: 2}
   throwObjPoint: {fileID: 4746009481096538}
   throwObj: {fileID: 0}
+  throwAfterParent: {fileID: 0}
+  throwVec: {x: 0, y: 3, z: 10}
 --- !u!114 &114863338929094192
 MonoBehaviour:
   m_ObjectHideFlags: 1

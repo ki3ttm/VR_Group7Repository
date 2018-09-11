@@ -1672,6 +1672,7 @@ MonoBehaviour:
   beginColListTop: 1
   autoNextFade: 0
   loopFade: 0
+  destroyOnLastFadeEnd: 0
 --- !u!114 &114665787637341742
 MonoBehaviour:
   m_ObjectHideFlags: 1

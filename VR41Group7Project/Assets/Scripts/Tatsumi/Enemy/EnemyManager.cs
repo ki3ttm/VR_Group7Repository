@@ -117,6 +117,9 @@ public class EnemyManager : MonoBehaviour {
 	[SerializeField, Tooltip("投げるオブジェクトの投げた後の親オブジェクト")]
 	Transform throwAfterParent = null;
 
+	[SerializeField, Tooltip("投げるベクトル")]
+	Vector3 throwVec = new Vector3(0.0f, 8.0f, 10.0f);
+
 	void Start() {
 		actionBeginTime = Time.time;
 		Routing();
@@ -149,8 +152,10 @@ public class EnemyManager : MonoBehaviour {
 				targetPoint.position = targetPointStartPoint.position;
 
 				// 投げるオブジェクトを生成
-				throwObj = Instantiate(throwObjPrefab, throwObjPoint).transform;
+				throwObj = Instantiate(throwObjPrefab).transform;
+				throwObj.parent = throwObjPoint;
 				throwObj.localPosition = Vector3.zero;
+				throwObj.GetComponent<Rigidbody>().isKinematic = true;
 			}
 
 			break;
@@ -172,17 +177,18 @@ public class EnemyManager : MonoBehaviour {
 
 		case State.actionBefore:
 			if ((Time.time - actionBeginTime) >= actionBeforeStanbdyTime) {
-				ThrowObject(new Vector3(0.0f, 1.0f, 1.0f));
+				// 投げる
+				ThrowObject(throwVec);
 				St = State.actionAfter;
+
+				// 待機モーション開始
+				motion.StartAnimation(HumanMotion.AnimaList.Wait);
 			}
 			break;
 
 		case State.actionAfter:
 			if ((Time.time - actionBeginTime) >= actionAfterStanbdyTime) {
 				St = State.aim;
-
-				// 待機モーション開始
-				motion.StartAnimation(HumanMotion.AnimaList.Wait);
 
 				// 古い的を削除
 				FadeColor destroyFade = targetPoint.gameObject.AddComponent<FadeColor>();
@@ -194,6 +200,12 @@ public class EnemyManager : MonoBehaviour {
 				targetPoint = Instantiate(targetPointPrefab).transform;
 				targetPointPrefab.GetComponent<FollowTarget>().Target = Camera.main.transform;
 				targetPoint.position = targetPointStartPoint.position;
+
+				// 投げるオブジェクトを生成
+				throwObj = Instantiate(throwObjPrefab).transform;
+				throwObj.parent = throwObjPoint;
+				throwObj.localPosition = Vector3.zero;
+				throwObj.GetComponent<Rigidbody>().isKinematic = true;
 			}
 			break;
 
@@ -237,10 +249,19 @@ public class EnemyManager : MonoBehaviour {
 
 	void ThrowObject(Vector3 _localVec) {
 		Rigidbody rb = throwObj.GetComponent<Rigidbody>();
-		rb.isKinematic = false;
-		Vector3 horizontalVec = (Quaternion.Euler(new Vector3(0.0f, transform.rotation.eulerAngles.y, 0.0f)) * new Vector3(_localVec.x, 0.0f, _localVec.y));
-		rb.velocity = new Vector3(horizontalVec.x, _localVec.y, horizontalVec.z);
 		throwObj.transform.parent = throwAfterParent;
+		throwObj.LookAt(targetPoint.position);
+		rb.isKinematic = false;
+		//Vector3 horizontalVec = (Quaternion.Euler(new Vector3(0.0f, transform.rotation.eulerAngles.y, 0.0f)) * new Vector3(_localVec.x, 0.0f, _localVec.y));
+		//rb.velocity = new Vector3(horizontalVec.x, _localVec.y, horizontalVec.z);
+		//Debug.Log(_localVec + " " + rb.velocity);
+		rb.velocity = (throwObj.rotation * _localVec);
+
+		//test
+//		UnityEditor.Selection.activeTransform = throwObj;
+//		UnityEditor.EditorApplication.isPaused = true;
+
+		throwObj = null;
 	}
 	void DropObject() {
 		ThrowObject(Vector3.zero);

@@ -16,10 +16,10 @@ TagManager:
   - 
   - 
   - TeleportableObject
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - PlayerThrowObject
+  - EnemyThrowObject
   - 
   - 
   - 
