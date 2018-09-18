@@ -154,9 +154,11 @@ public class GrabController : MonoBehaviour {
 		//GrabObj.transform.parent = GrabObj.DefParent;
 		// 掴み中オブジェクトの親オブジェクトを無くす
 		GrabObj.transform.parent = null;
-		
+
 		// 掴み中オブジェクトのRigidbodyのIsKinematicを元に戻す
-		GrabObj.GetComponent<Rigidbody>().isKinematic = GrabObj.DefIsKinematic;
+		//GrabObj.GetComponent<Rigidbody>().isKinematic = GrabObj.DefIsKinematic;
+		// 掴み中オブジェクトのRigidbodyのIsKinematicをfalseに
+		GrabObj.GetComponent<Rigidbody>().isKinematic = false;
 
 		// コントローラーの移動量と回転量をオブジェクトにコピー
 		GrabObj.GetComponent<Rigidbody>().velocity = Controller.velocity;
