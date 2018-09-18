@@ -128,6 +128,9 @@ public class GrabController : MonoBehaviour {
 		// 掴み中オブジェクトに設定
 		GrabObj = _grabCol.Obj;
 
+		// 掴み中オブジェクトの掴まれる前の状態を保持
+		GrabObj.SetDefaultState();
+
 		// 掴み中オブジェクトの親を自身に設定
 		GrabObj.transform.parent = transform;
 
