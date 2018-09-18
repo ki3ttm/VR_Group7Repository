@@ -16,11 +16,11 @@ public class LifeManager: MonoBehaviour {
 			return damageEvents;
 		}
 	}
-	[SerializeField, Tooltip("ゲームオーバー時に発生させるイベント")]
-	UnityEngine.Events.UnityEvent gameOvereEvents = new UnityEngine.Events.UnityEvent();
-	public UnityEngine.Events.UnityEvent GameOverEvents {
+	[SerializeField, Tooltip("死亡時に発生させるイベント")]
+	UnityEngine.Events.UnityEvent deadEvents = new UnityEngine.Events.UnityEvent();
+	public UnityEngine.Events.UnityEvent DeadEvents {
 		get {
-			return gameOvereEvents;
+			return deadEvents;
 		}
 	}
 	[SerializeField, Tooltip("直前のダメージ源オブジェクト"), ReadOnly]
@@ -34,7 +34,7 @@ public class LifeManager: MonoBehaviour {
 			life -= customDmg.Dmg;
 		}
 		if (life <= 0) {
-			GameOverEvents.Invoke();
+			DeadEvents.Invoke();
 		}
 	}
 
@@ -47,5 +47,9 @@ public class LifeManager: MonoBehaviour {
 	public void Hit(Collider _col) {
 		prevDmgObj = _col.gameObject;
 		DamageEvents.Invoke();
+	}
+
+	public void SelfDestroy() {
+		Destroy(gameObject);
 	}
 }
