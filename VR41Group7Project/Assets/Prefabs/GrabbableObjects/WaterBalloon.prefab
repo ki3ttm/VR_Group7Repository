@@ -69,7 +69,6 @@ GameObject:
   - component: {fileID: 4194342461451728}
   - component: {fileID: 54226926599386708}
   - component: {fileID: 114117584101877466}
-  - component: {fileID: 114802176433430334}
   m_Layer: 0
   m_Name: WaterBalloon
   m_TagString: Untagged
@@ -135,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 1019945062025274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4194342461451728}
   m_RootOrder: 3
@@ -279,24 +278,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 114117584101877466}
---- !u!114 &114802176433430334
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1734090304930848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a721bb35e7d0a4e408b2ef91bc35dd84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  correctType: 0
-  grabInput: 3
-  releaseInput: 5
-  isGrab: 0
-  grabbableColList: []
-  defParent: {fileID: 0}
-  defIsKinematic: 0
 --- !u!135 &135036969068847340
 SphereCollider:
   m_ObjectHideFlags: 1

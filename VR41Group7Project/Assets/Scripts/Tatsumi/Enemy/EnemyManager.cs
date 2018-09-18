@@ -167,14 +167,15 @@ public class EnemyManager : MonoBehaviour {
 			break;
 
 		case State.actionBefore:
-			if ((Time.time - actionBeginTime) >= actionBeforeStanbdyTime) {
-				// 投げる
-				ThrowObject(throwVec);
-				St = State.actionAfter;
-
-				// 待機モーション開始
-				motion.StartAnimation(HumanMotion.AnimaList.Wait);
-			}
+			// actionAfterへはアニメーションイベントでThrowActionを呼び出して遷移
+			//			if ((Time.time - actionBeginTime) >= actionBeforeStanbdyTime) {
+			//			// 投げる
+			//			ThrowObject(throwVec);
+			//			St = State.actionAfter;
+			//
+			//			// 待機モーション開始
+			//			motion.StartAnimation(HumanMotion.AnimaList.Wait);
+			//			}
 			break;
 
 		case State.actionAfter:
@@ -272,5 +273,14 @@ public class EnemyManager : MonoBehaviour {
 	}
 	void DropObject() {
 		ThrowObject(Vector3.zero);
+	}
+
+	public void ThrowAction() {
+		// 投げる
+		ThrowObject(throwVec);
+		St = State.actionAfter;
+
+		// 待機モーション開始
+		motion.StartAnimation(HumanMotion.AnimaList.Wait);
 	}
 }

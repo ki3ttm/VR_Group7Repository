@@ -60,8 +60,7 @@ public class GrabbableObject : MonoBehaviour {
 	}
 
 	void Start() {
-		defParent = transform.parent;
-		defIsKinematic = GetComponent<Rigidbody>().isKinematic;
+		SetDefaultState();
 	}
 
 	public bool CheckGrabInput(VirtualViveController _virtualCtrl) {
@@ -76,5 +75,10 @@ public class GrabbableObject : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+
+	public void SetDefaultState() {
+		defParent = transform.parent;
+		defIsKinematic = GetComponent<Rigidbody>().isKinematic;
 	}
 }
