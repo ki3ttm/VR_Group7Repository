@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TutrorialText : MonoBehaviour {
+public class TutorialText : MonoBehaviour {
     // 看板のゲームオブジェクトの取得
     public GameObject SignBoard;
+
     // 表示する文字の変数
     private TextMeshPro tutoText;
+    // 成功の文字を出す変数
+    public GameObject collectText;
     // 次のチュートリアルに進むかどうかの変数
     private bool next = false;
+    // α値設定
+    private float alpha;
+    // 成功文字が消えたかどうか
+    private bool collectFlg = false;
 
     // 今どのチュートリアルを表示しているかの列挙型変数
     enum TUTO_TRANS{
@@ -29,16 +36,30 @@ public class TutrorialText : MonoBehaviour {
 
     // チュートリアルの順番
     private TUTO_TRANS tutoTrans = TUTO_TRANS.HOLD_SHIELD;
-    // 右側コントローラー
-   // public ViveControllerGrabObject rightController;
-    // 左側コントローラー
-   // public ViveControllerGrabObject leftController;
+
+    // 右のコントローラーに持ってるもの
+    private GrabController rightGrabController;
+    // 左のコントローラーに持ってるもの
+    private GrabController leftGrabController;
+
+    // 右のコントローラー
+    private VirtualViveController rightController;
+    // 左のコントローラー
+    private VirtualViveController leftController;
+
+    // 左手に何か持ってるか
+    private bool leftHandObj;
 
     // Use this for initialization
     void Start () {
         SignBoard.SetActive(true);
         tutoText = SignBoard.transform.GetComponentInChildren<TextMeshPro>();
-	}
+        rightGrabController = GameObject.Find("RightController").GetComponent<GrabController>();
+        leftGrabController = GameObject.Find("LeftContorller").GetComponent<GrabController>();
+        rightController = GameObject.Find("RightController").GetComponent<VirtualViveController>();
+        leftController = GameObject.Find("LeftContorller").GetComponent<VirtualViveController>();
+        alpha = 1.0f;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -54,6 +75,8 @@ public class TutrorialText : MonoBehaviour {
             tutoTrans += 1;
             next = false;
         }
+
+        Collect();
 
         switch (tutoTrans)
         {
@@ -113,38 +136,64 @@ public class TutrorialText : MonoBehaviour {
         {
             next = true;
         }
-        /*switch (tutoTrans)
+        switch (tutoTrans)
         {
             case TUTO_TRANS.HOLD_SHIELD:
-                if (どっちかの手に盾持ってる)
+                if ((rightGrabController.GrabObj != null && rightGrabController.GrabObj.name == "Shield") ||
+                    (leftGrabController.GrabObj != null && leftGrabController.GrabObj.name == "Shield"))
                 {
-                    if (次へを押す) {
-                        次のチュートリアルへ
+                    if(leftGrabController.GrabObj != null)
+                    {
+                        leftHandObj = true;
                     }
+                    else
+                    {
+                        leftHandObj = false;
+                    }
+                    // 次のチュートリアルへ
+                    next = true;
+                    collectFlg = true;
+                    alpha = 1.0f;
                 }
                 break;
 
             case TUTO_TRANS.SWAP_HAND:
-                if (持ち手を変える) {
-                    if (次へを押す) {
-                        次のチュートリアルへ
+                if (leftHandObj) {
+                    if(leftGrabController.GrabObj == null && rightGrabController.GrabObj != null && rightGrabController.GrabObj.name == "Shield")
+                    {
+                        // 次のチュートリアルへ
+                        next = true;
+                        collectFlg = true;
+                        alpha = 1.0f;
+                    }
+                }
+                else
+                {
+                    if (rightGrabController.GrabObj == null && leftGrabController.GrabObj != null && leftGrabController.GrabObj.name == "Shield")
+                    {
+                        // 次のチュートリアルへ
+                        next = true;
+                        collectFlg = true;
+                        alpha = 1.0f;
                     }
                 }
                 break;
 
             case TUTO_TRANS.ONLY_ONE_HAND:
-                if (次へを押す) {
-                    次のチュートリアルへ
+                if (rightController.GetPress(SteamVR_Controller.ButtonMask.Trigger) || leftController.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+                    // 次のチュートリアルへ
+                    next = true;
                 }
                 break;
 
-            case TUTO_TRANS.THROW_BALOON:
-                if (次へを押す) {
-                    次のチュートリアルへ
+            case TUTO_TRANS.THROW_BALOON:               
+                if (rightController.GetPress(SteamVR_Controller.ButtonMask.Trigger) || leftController.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+                    // 次のチュートリアルへ
+                    next = true;
                 }
                 break;
 
-            case TUTO_TRANS.PREVENT_BALOON:
+            /*case TUTO_TRANS.PREVENT_BALOON:
                 if (一個でも弾き返す) {
                     if (次へを押す) {
                         次のチュートリアルへ
@@ -195,10 +244,27 @@ public class TutrorialText : MonoBehaviour {
                         チュートリアル終了
                     }
                 }
-                break;
+                break;*/
 
             default:
                 break;
-        }*/
+        }
+    }
+
+    void Collect()
+    {
+        if (collectFlg)
+        {
+            collectText.SetActive(true);
+
+            collectText.GetComponent<TextMeshProUGUI>().color = new Color(collectText.GetComponent<TextMeshProUGUI>().color.r, collectText.GetComponent<TextMeshProUGUI>().color.g, collectText.GetComponent<TextMeshProUGUI>().color.b, alpha);
+            alpha -= 0.01f;
+
+            if (alpha <= 0)
+            {
+                collectText.SetActive(false);
+                collectFlg = false;
+            }
+        }
     }
 }

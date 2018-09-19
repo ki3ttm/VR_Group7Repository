@@ -69,6 +69,10 @@ public class LaserPointer : MonoBehaviour {
 	}
 
 	void Update() {
+		if (!laser || !reticle) {
+			return;
+		}
+
 //		Debug.Log("Update");
 
 		// Touchpadを押されている間、レーザーを表示する
@@ -136,5 +140,24 @@ public class LaserPointer : MonoBehaviour {
 		// テレポート先の位置に差を加える
 		// （これがないと微妙に違う位置にテレポートする事がある）
 		cameraRigTransform.position = hitPoint + difference;
+	}
+	
+	public void DestroyPrefab() {
+		Destroy(reticle);
+		Destroy(laser);
+	}
+
+	public void CreatPrefab() {
+		// レーザーのオブジェクトをプレハブから生成する
+		laser = Instantiate(laserPrefab);
+
+		// Transformのコンポネントを最初から取得する
+		// (アクセスしやすくするため)
+		laserTransform = laser.transform;
+
+		// 的のプレハブからの的のオブジェクトを生成する
+		reticle = Instantiate(teleportReticlePrefab);
+		// 的のTransformコンポネントを取得する
+		teleportReticleTransform = reticle.transform;
 	}
 }

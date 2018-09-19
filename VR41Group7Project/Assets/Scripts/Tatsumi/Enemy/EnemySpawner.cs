@@ -98,7 +98,6 @@ public class EnemySpawner : MonoBehaviour {
 				spawnEnemyList.RemoveAt(idx);
 			}
 		}
-
 		// 前回の敵出現から一定時間以上経過していれば
 		if ((prevSpawnTime + SpawnSpanTime) <= Time.time) {
 			// 敵の最大出現数
