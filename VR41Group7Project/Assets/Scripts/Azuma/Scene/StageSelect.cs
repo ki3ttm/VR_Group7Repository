@@ -22,15 +22,16 @@ public class StageSelect : MonoBehaviour {
 	void Update() {
 		if (!sceneController) {
 			// ここではシーンコントローラが所得できなかった場合の処理を書きます
-			sceneController = GameObject.Find("[SceneManager]").GetComponent<SceneController>();
-		}
-		if (Input.GetKeyDown(KeyCode.A)) {
-			controller.enabled = false;
-			sceneController.SceneChange(SceneController.SceneState.Tutorial);
-		}
-		if (Input.GetKeyDown(KeyCode.D)) {
-			controller.enabled = false;
-			sceneController.SceneChange(SceneController.SceneState.GameMain);
+			sceneController = GameObject.Find ("[SceneManager]").GetComponent<SceneController> ();
+		} else {
+			if (Input.GetKeyDown (KeyCode.A)) {
+				controller.enabled = false;
+				sceneController.SceneChange (SceneController.SceneState.Tutorial);
+			}
+			if (Input.GetKeyDown (KeyCode.D)) {
+				controller.enabled = false;
+				sceneController.SceneChange (SceneController.SceneState.GameMain);
+			}
 		}
 	}
 

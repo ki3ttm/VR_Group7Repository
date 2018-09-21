@@ -27,6 +27,7 @@ public class GameMain : MonoBehaviour {
 		}
 	}
 	[SerializeField] private GameObject cameraHeadObj;
+	[SerializeField] private GameObject cameraEyeObj;
 	/// <summary>
 	/// シーンコントローラの取得
 	/// </summary>
@@ -36,10 +37,17 @@ public class GameMain : MonoBehaviour {
 
 	private void Start() {
 		sceneController = GameObject.Find("[SceneManager]").GetComponent<SceneController>();
+		Transform cameraHeadTransform;
 		// 座標の修正
-		Transform cameraHeadTransform = GameObject.Find("[SceneManager]").GetComponent<SceneController>().CameraHeadObj.transform;    // ゲームメイン以外のところからカメラリグを取得
-		cameraHeadObj.transform.position = cameraHeadTransform.position;
-		cameraHeadObj.transform.rotation = cameraHeadTransform.rotation;
+		if (cameraHeadObj.activeSelf) {
+			cameraHeadTransform = GameObject.Find ("[SceneManager]").GetComponent<SceneController> ().CameraHeadObj.transform;    // ゲームメイン以外のところからカメラリグを取得
+			cameraHeadObj.transform.position = cameraHeadTransform.position;
+			cameraHeadObj.transform.rotation = cameraHeadTransform.rotation;
+		} else if (cameraEyeObj.activeSelf) {
+			cameraHeadTransform = GameObject.Find ("[SceneManager]").GetComponent<SceneController> ().CameraEyeObj.transform;    // ゲームメイン以外のところからカメラリグを取得
+			cameraEyeObj.transform.position = cameraHeadTransform.position;
+			cameraEyeObj.transform.rotation = cameraHeadTransform.rotation;
+		}
 		GameObject.Find("[SceneManager]").GetComponent<SceneController>().CameraChange(false);
 	}
 
@@ -51,24 +59,24 @@ public class GameMain : MonoBehaviour {
 			if (Input.GetKeyDown(KeyCode.Return)) {
 				// sceneController.SceneChange( シーンの列挙子 )を呼び出すとシーンを変えることができます
 				sceneController.SceneChange(SceneController.SceneState.Result);
-
-				// 左コントローラの操作
-				if (sceneController.LeftController.GetGripDown()) {
-					sceneController.SceneChange(SceneController.SceneState.Result);
-				}
-				if (sceneController.LeftController.GetHairTriggerDown()) {
-					sceneController.SceneChange(SceneController.SceneState.Result);
-				}
-
-				// 右コントローラの操作
-				if (sceneController.RightController.GetGripDown()) {
-					sceneController.SceneChange(SceneController.SceneState.Result);
-				}
-				if (sceneController.RightController.GetHairTriggerDown()) {
-					sceneController.SceneChange(SceneController.SceneState.Result);
-				}
-
 			}
+
+			// 左コントローラの操作
+			if (sceneController.LeftController.GetGripDown()) {
+				sceneController.SceneChange(SceneController.SceneState.Result);
+			}
+			if (sceneController.LeftController.GetHairTriggerDown()) {
+				sceneController.SceneChange(SceneController.SceneState.Result);
+			}
+
+			// 右コントローラの操作
+			if (sceneController.RightController.GetGripDown()) {
+				sceneController.SceneChange(SceneController.SceneState.Result);
+			}
+			if (sceneController.RightController.GetHairTriggerDown()) {
+				sceneController.SceneChange(SceneController.SceneState.Result);
+			}
+
 		} else {
 			// ここではシーンコントローラが所得できなかった場合の処理を書きます
 			sceneController = GameObject.Find("[SceneManager]").GetComponent<SceneController>();

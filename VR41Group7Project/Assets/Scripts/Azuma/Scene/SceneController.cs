@@ -41,8 +41,10 @@ public class SceneController : MonoBehaviour {
 	Fade fade;
 	[SerializeField] private GameObject sceneObj;
 	public GameObject CameraHeadObj;
+	public GameObject CameraEyeObj;
 	SceneState sceneStateOld;
 	bool fastFlg;
+	[SerializeField] Canvas effectCanvasObj;
 	private void Awake() {
 		fade = GetComponent<Fade>();
 		fastFlg = false;
@@ -101,10 +103,22 @@ public class SceneController : MonoBehaviour {
 
 		// チュートリアルまたはゲームメインから変わるときにカメラの座標を引き継ぐためのスクリプト
 		if (sceneStateOld == SceneState.Tutorial || sceneStateOld == SceneState.GameMain) {
+			Transform otherCameraTransform;
 			// 超危険な取り方をしております
-			Transform otherCameraTransform = GameObject.Find("Camera (head)").transform;
-			CameraHeadObj.transform.position = otherCameraTransform.position;
-			CameraHeadObj.transform.rotation = otherCameraTransform.rotation;
+			// エミュ上
+			if (CameraHeadObj.activeSelf) {
+				otherCameraTransform = GameObject.Find ("Camera (head)").transform;
+				CameraHeadObj.transform.position = otherCameraTransform.position;
+				CameraHeadObj.transform.rotation = otherCameraTransform.rotation;
+			}
+
+			// VR上
+			else if (CameraEyeObj.activeSelf) {
+				otherCameraTransform = GameObject.Find ("Camera (eye)").transform;
+				CameraEyeObj.transform.position = otherCameraTransform.position;
+				CameraEyeObj.transform.rotation = otherCameraTransform.rotation;
+			}
+
 		}
 
 		// sceneに入っている無駄なものをすべて削除する
@@ -163,6 +177,8 @@ public class SceneController : MonoBehaviour {
 			}
 			yield return null;
 		}
+
+		effectCanvasObj.worldCamera = GameObject.Find("Camera (eye)").GetComponent<Camera>();
 
 		// アクティブシーンの切り替え
 		SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName[name.GetHashCode()]));

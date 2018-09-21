@@ -25,6 +25,7 @@ public class TutorialManager : MonoBehaviour {
 		}
 	}
 	[SerializeField] private GameObject cameraHeadObj;
+	public GameObject cameraEyeObj;
 	/// <summary>
 	/// シーンコントローラの取得
 	/// </summary>
@@ -36,9 +37,17 @@ public class TutorialManager : MonoBehaviour {
 	private void Start() {
 		sceneController = GameObject.Find("[SceneManager]").GetComponent<SceneController>();
 		// 座標の修正
-		Transform cameraHeadTransform = GameObject.Find("[SceneManager]").GetComponent<SceneController>().CameraHeadObj.transform;    // ゲームメイン以外のところからカメラリグを取得
-		cameraHeadObj.transform.position = cameraHeadTransform.position;
-		cameraHeadObj.transform.rotation = cameraHeadTransform.rotation;
+		Transform cameraHeadTransform;
+		// 座標の修正
+		if (cameraHeadObj.activeSelf) {
+			cameraHeadTransform = GameObject.Find ("[SceneManager]").GetComponent<SceneController> ().CameraHeadObj.transform;    // ゲームメイン以外のところからカメラリグを取得
+			cameraHeadObj.transform.position = cameraHeadTransform.position;
+			cameraHeadObj.transform.rotation = cameraHeadTransform.rotation;
+		} else if (cameraEyeObj.activeSelf) {
+			cameraHeadTransform = GameObject.Find ("[SceneManager]").GetComponent<SceneController> ().CameraEyeObj.transform;    // ゲームメイン以外のところからカメラリグを取得
+			cameraEyeObj.transform.position = cameraHeadTransform.position;
+			cameraEyeObj.transform.rotation = cameraHeadTransform.rotation;
+		}
 		GameObject.Find("[SceneManager]").GetComponent<SceneController>().CameraChange(false);
 
 	}
