@@ -150,6 +150,10 @@ public class SceneController : MonoBehaviour {
 			}
 		}
 
+		if (name != SceneState.Result) {
+			GameCount.CountReset();
+		}
+
 		yield return new WaitForEndOfFrame();
 		// タイトル、リザルト、ステージセレクトへ遷移する場合はカメラを切り替えてレーザーの作成を行います
 		if (name == SceneState.Title || name == SceneState.Result || name == SceneState.StageSelect) {
