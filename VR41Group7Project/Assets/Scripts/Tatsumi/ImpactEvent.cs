@@ -28,6 +28,8 @@ public class ImpactEvent : MonoBehaviour {
 
 		prevMaxImpact = Mathf.Max(prevMaxImpact, vel.magnitude);
 
+//		Debug.Log("chekc " + name + " " + _col.collider.name + " " + (vel.magnitude >= border) + "(" + vel.magnitude + " >= " + border + ")");
+
 		// 勢いが一定未満なら
 		if (vel.magnitude < border) return;
 

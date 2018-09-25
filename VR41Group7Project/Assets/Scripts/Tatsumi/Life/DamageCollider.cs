@@ -7,10 +7,12 @@ public class DamageCollider : MonoBehaviour {
 	LifeManager lifeMng = null;
 
 	void OnCollisionEnter(Collision _col) {
+		//		Debug.Log(_col.collider.name);
+
 		lifeMng.Hit(_col.collider);
 	}
 
-	void OnTriggerEnter(Collider _col) {
-		lifeMng.Hit(_col);
-	}
+//	void OnTriggerEnter(Collider _col) {
+//		lifeMng.Hit(_col);
+//	}
 }

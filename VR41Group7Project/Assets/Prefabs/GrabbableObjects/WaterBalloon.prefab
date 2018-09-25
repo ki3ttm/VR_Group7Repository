@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 54226926599386708}
   - component: {fileID: 114117584101877466}
   - component: {fileID: 114799074076658434}
+  - component: {fileID: 114957101116519902}
   m_Layer: 0
   m_Name: WaterBalloon
   m_TagString: Untagged
@@ -635,6 +636,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vel: 5
   angularVel: {x: 0, y: 0, z: 0}
+--- !u!114 &114957101116519902
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1734090304930848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b20c4d511bd564f9eb83ec8ea90079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135036969068847340
 SphereCollider:
   m_ObjectHideFlags: 1

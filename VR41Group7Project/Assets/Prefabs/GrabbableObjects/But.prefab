@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 4521036408024244}
   - component: {fileID: 54756110992916378}
   - component: {fileID: 114490662308938576}
+  - component: {fileID: 114806996613742240}
   m_Layer: 0
   m_Name: But
   m_TagString: Untagged
@@ -422,6 +423,27 @@ MonoBehaviour:
   grabbableColList: []
   defParent: {fileID: 0}
   defIsKinematic: 0
+  grabEv:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  releaseEv:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114806996613742240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1511549045563182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b20c4d511bd564f9eb83ec8ea90079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135385465034450264
 SphereCollider:
   m_ObjectHideFlags: 1

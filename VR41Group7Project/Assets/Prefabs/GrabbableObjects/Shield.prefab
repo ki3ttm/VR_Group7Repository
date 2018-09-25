@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114374493496253996}
   - component: {fileID: 114893586524163660}
   - component: {fileID: 114081300142331460}
+  - component: {fileID: 114843786450851546}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -302,6 +303,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114843786450851546
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1431267456677274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b20c4d511bd564f9eb83ec8ea90079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114893586524163660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -373,6 +385,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   prevDmgObj: {fileID: 0}
+  lastDmgTime: 0
+  dmgSpanTime: 1
 --- !u!135 &135708358419139684
 SphereCollider:
   m_ObjectHideFlags: 1

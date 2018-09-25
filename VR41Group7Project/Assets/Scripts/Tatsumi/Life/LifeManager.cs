@@ -26,7 +26,17 @@ public class LifeManager: MonoBehaviour {
 	[SerializeField, Tooltip("直前のダメージ源オブジェクト"), ReadOnly]
 	GameObject prevDmgObj = null;
 
+	[SerializeField, Tooltip("最後にダメージを受けた時間")]
+	float lastDmgTime = 0.0f;
+	[SerializeField, Tooltip("最後にダメージを受けてから次にダメージを受け付けるまでの時間")]
+	float dmgSpanTime = 1.0f;
+
 	public void LifeDamage() {
+		if ((lastDmgTime + dmgSpanTime) > Time.time) {
+			return;
+		}
+		lastDmgTime = Time.time;
+
 		CustomDamageSource customDmg = null;
 		if (prevDmgObj) {
 			customDmg = prevDmgObj.GetComponent<CustomDamageSource>();
