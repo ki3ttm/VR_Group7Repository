@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class ImpactEvent : MonoBehaviour {
 	[SerializeField, Tooltip("発生させるイベント")]
 	UnityEngine.Events.UnityEvent events = new UnityEngine.Events.UnityEvent();
@@ -14,9 +13,9 @@ public class ImpactEvent : MonoBehaviour {
 	void OnCollisionEnter(Collision _col) {
 		CheckImpact(_col);
 	}
-	void OnCollisionStay(Collision _col) {
-		CheckImpact(_col);
-	}
+//	void OnCollisionStay(Collision _col) {
+//		CheckImpact(_col);
+//	}
 
 	void CheckImpact(Collision _col) {
 		Vector3 vel = GetComponent<Rigidbody>().velocity;
@@ -29,11 +28,10 @@ public class ImpactEvent : MonoBehaviour {
 
 		prevMaxImpact = Mathf.Max(prevMaxImpact, vel.magnitude);
 
-		// 勢いが一定以下なら
-		if (vel.magnitude <= border) return;
+		// 勢いが一定未満なら
+		if (vel.magnitude < border) return;
 
 		// 一定以上の勢いで衝突したらイベント実行
-		Debug.Log("ImpactEvent");
 		events.Invoke();
 	}
 

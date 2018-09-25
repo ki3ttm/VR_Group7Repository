@@ -104,6 +104,7 @@ public class GrabController : MonoBehaviour {
 				GrabbableCollider grabTargetCol = null;
 				float nearAngle = float.MaxValue;
 				foreach (var grabbingCol in grabbingColList) {
+					if (!grabbingCol) continue;
 					float angle = Vector3.Dot(transform.forward, grabbingCol.transform.forward);
 					if (nearAngle > angle) {
 						nearAngle = angle;
@@ -126,6 +127,8 @@ public class GrabController : MonoBehaviour {
 	}
 
 	void GrabObject(GrabbableCollider _grabCol) {
+		if (!_grabCol) return;
+
 		// 掴み中オブジェクトに設定
 		GrabObj = _grabCol.Obj;
 		GrabObj.IsGrab = true;
