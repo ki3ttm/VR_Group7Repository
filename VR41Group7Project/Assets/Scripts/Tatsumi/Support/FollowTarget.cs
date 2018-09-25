@@ -17,6 +17,9 @@ public class FollowTarget : MonoBehaviour {
 	float spd = 0.1f;
 
 	void FixedUpdate () {
+		if (!target) {
+			Debug.LogWarning("Targetが設定されていません。\n" + name);
+		};
 		float dis = Vector3.Distance(transform.position, target.position);
 		Vector3 vec = (target.position - transform.position);
 		transform.position += (vec * Mathf.Min(dis, spd));

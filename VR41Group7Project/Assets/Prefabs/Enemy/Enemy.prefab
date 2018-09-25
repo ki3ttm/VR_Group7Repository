@@ -97,6 +97,9 @@ GameObject:
   - component: {fileID: 114827445075475512}
   - component: {fileID: 114863338929094192}
   - component: {fileID: 114682155989361432}
+  - component: {fileID: 54301718969156224}
+  - component: {fileID: 114569239885335880}
+  - component: {fileID: 114867421052954266}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1178,6 +1181,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1140908195665502}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54301718969156224
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064667244889054}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!95 &95481173551082322
 Animator:
   serializedVersion: 3
@@ -1218,6 +1236,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f2c4edbb8c04649b106da9693f3615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114569239885335880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064667244889054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dff113db1ae9be4ebb4bdb1660a443b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 1
+  dmgInvincibleTime: 1
+  dmgCol: {fileID: 136596023566700176}
+  damageEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  deadEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114569239885335880}
+        m_MethodName: Instantiate
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1976817009018562, guid: b0693a59cd14d744b8d5f14546561814,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114569239885335880}
+        m_MethodName: SelfDestroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  prevDmgObj: {fileID: 0}
 --- !u!114 &114682155989361432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1269,7 +1335,7 @@ MonoBehaviour:
   throwObjPoint: {fileID: 4746009481096538}
   throwObj: {fileID: 0}
   throwAfterParent: {fileID: 0}
-  throwVec: {x: 0, y: 3, z: 10}
+  throwVec: {x: 0, y: 5, z: 10}
 --- !u!114 &114863338929094192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1285,6 +1351,35 @@ MonoBehaviour:
   srcLineWeightList: []
   defLineWeight: 1
   endVecPoint: {fileID: 0}
+--- !u!114 &114867421052954266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064667244889054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07faeea153f64f44999082dbb5ddfb8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  events:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114569239885335880}
+        m_MethodName: LifeDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  border: 3
+  prevMaxImpact: 0
 --- !u!136 &136596023566700176
 CapsuleCollider:
   m_ObjectHideFlags: 1

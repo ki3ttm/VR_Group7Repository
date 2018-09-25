@@ -84,6 +84,7 @@ public class GrabController : MonoBehaviour {
 				GrabbableObject grabTargetObj = null;
 				float nearDis = float.MaxValue;
 				foreach (var grabbingObj in grabbingObjList) {
+					if (!grabbingObj) continue;
 					float dis = Vector3.Distance(transform.position, grabbingObj.transform.position);
 					if (nearDis > dis) {
 						nearDis = dis;
@@ -127,6 +128,7 @@ public class GrabController : MonoBehaviour {
 	void GrabObject(GrabbableCollider _grabCol) {
 		// 掴み中オブジェクトに設定
 		GrabObj = _grabCol.Obj;
+		GrabObj.IsGrab = true;
 
 		// 掴み中オブジェクトの掴まれる前の状態を保持
 		GrabObj.SetDefaultState();
@@ -154,6 +156,7 @@ public class GrabController : MonoBehaviour {
 		//GrabObj.transform.parent = GrabObj.DefParent;
 		// 掴み中オブジェクトの親オブジェクトを無くす
 		GrabObj.transform.parent = null;
+		GrabObj.IsGrab = false;
 
 		// 掴み中オブジェクトのRigidbodyのIsKinematicを元に戻す
 		//GrabObj.GetComponent<Rigidbody>().isKinematic = GrabObj.DefIsKinematic;

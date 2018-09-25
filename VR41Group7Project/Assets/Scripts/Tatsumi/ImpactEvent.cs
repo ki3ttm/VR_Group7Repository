@@ -40,4 +40,8 @@ public class ImpactEvent : MonoBehaviour {
 	public void SelfDestroy() {
 		Destroy(gameObject);
 	}
+	public void InstantiateObject(GameObject _prefab) {
+		GameObject obj = Instantiate(_prefab);
+		obj.transform.position = transform.position;
+	}
 }

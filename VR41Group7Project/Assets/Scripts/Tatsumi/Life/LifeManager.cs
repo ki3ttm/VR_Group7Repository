@@ -27,7 +27,10 @@ public class LifeManager: MonoBehaviour {
 	GameObject prevDmgObj = null;
 
 	public void LifeDamage() {
-		CustomDamageSource customDmg = prevDmgObj.GetComponent<CustomDamageSource>();
+		CustomDamageSource customDmg = null;
+		if (prevDmgObj) {
+			customDmg = prevDmgObj.GetComponent<CustomDamageSource>();
+		}
 		if (!customDmg) {
 			life--;
 		} else {
@@ -51,5 +54,10 @@ public class LifeManager: MonoBehaviour {
 
 	public void SelfDestroy() {
 		Destroy(gameObject);
+	}
+
+	public void InstantiateObject(GameObject _prefab) {
+		GameObject obj = Instantiate(_prefab);
+		obj.transform.position = transform.position;
 	}
 }

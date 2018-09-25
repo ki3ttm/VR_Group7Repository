@@ -31,7 +31,13 @@ public class GrabbableObject : MonoBehaviour {
 			return isGrab;
 		}
 		set {
+			if (isGrab == value) return;
 			isGrab = value;
+			if (isGrab) {
+				grabEv.Invoke();
+			} else {
+				releaseEv.Invoke();
+			}
 		}
 	}
 
@@ -58,6 +64,11 @@ public class GrabbableObject : MonoBehaviour {
 			return defIsKinematic;
 		}
 	}
+
+	[SerializeField, Tooltip("掴まれた時のイベント")]
+	UnityEngine.Events.UnityEvent grabEv = new UnityEngine.Events.UnityEvent();
+	[SerializeField, Tooltip("離された時のイベント")]
+	UnityEngine.Events.UnityEvent releaseEv = new UnityEngine.Events.UnityEvent();
 
 	void Start() {
 		SetDefaultState();

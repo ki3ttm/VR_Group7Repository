@@ -56,6 +56,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4851857928719368}
   - component: {fileID: 135609723215239160}
+  - component: {fileID: 114563329099501964}
   m_Layer: 12
   m_Name: EnemyThrowCollider
   m_TagString: Untagged
@@ -154,8 +155,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4312313156800628}
   - component: {fileID: 135762206378154432}
-  m_Layer: 12
-  m_Name: Collider
+  - component: {fileID: 114534208627602016}
+  m_Layer: 11
+  m_Name: PlayerThrowCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -488,6 +490,38 @@ MonoBehaviour:
   grabbableColList: []
   defParent: {fileID: 0}
   defIsKinematic: 0
+  grabEv:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114534208627602016}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 114563329099501964}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  releaseEv:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114184031768856924
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -500,6 +534,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 114117584101877466}
+--- !u!114 &114534208627602016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901662423000562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c68697250974341a894ec421fedcbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114539829056686406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -513,6 +558,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4245699045425394}
   spd: Infinity
+--- !u!114 &114563329099501964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1116052965187238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c68697250974341a894ec421fedcbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114799074076658434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -526,10 +582,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   events:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114799074076658434}
+        m_MethodName: InstantiateObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1976817009018562, guid: b0693a59cd14d744b8d5f14546561814,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114799074076658434}
+        m_MethodName: SelfDestroy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  border: 3
+  border: 1
   prevMaxImpact: 0
 --- !u!114 &114826113267119258
 MonoBehaviour:
